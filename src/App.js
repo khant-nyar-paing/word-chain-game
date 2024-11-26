@@ -167,7 +167,7 @@ const WordChain = () => {
 
   return (
     <div className="min-h-screen flex flex-col">
-      <div className="bg-white sticky top-0 z-10">
+      <div className="absolute top-0 left-0 right-0 z-20 bg-white">
         <GameHeader
           startWord={moves[0]}
           targetWord={targetWord}

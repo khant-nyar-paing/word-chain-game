@@ -1,6 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { ArrowDown, RotateCcw, Send } from 'lucide-react';
-import { ArrowDown, RotateCcw, Send } from 'lucide-react';
 import wordPairs from './wordPairs';
 
 const SoundEffects = {
@@ -264,16 +263,15 @@ const WordChain = () => {
                   {word}
                 </div>
                 {index < moves.length - 1 && (
-                <ArrowDown
-                <ArrowDown
-                  className={`
+                  <ArrowDown
+                    className={`
                     text-gray-400 my-1
                     text-gray-400 my-1
                     transition-all duration-300
                     ${isNewMove && index === moves.length - 2 ? 'animate-pulse' : ''}
                   `}
-                  size={24}
-                />
+                    size={24}
+                  />
                 )}
               </div>
             </div>

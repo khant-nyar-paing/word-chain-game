@@ -249,12 +249,11 @@ const WordChain = () => {
                   className={`
                   px-4 sm:px-6 py-2 sm:py-3 rounded-lg font-mono text-lg
                   transition-all duration-300
-                  ${isNewMove && index === moves.length - 1 ? 'animate-bounce-subtle' : ''}
+                  ${isNewMove && index === moves.length - 1 ? 'animate-new-word' : ''}
                   ${word === targetWord
                       ? 'bg-green-100 text-green-800 hover:bg-green-200'
                       : 'bg-blue-100 text-blue-800 hover:bg-blue-200'
                     }
-                  transform hover:scale-105
                   transform hover:scale-105
                   hover:shadow-md
                   min-w-[100px] sm:min-w-[120px] text-center
@@ -383,17 +382,25 @@ const WordChain = () => {
 
         /* Animations */
         @keyframes slideIn {
-          from {
+          0% {
             opacity: 0;
-            transform: translateY(-20px);
+            transform: translateY(-40px);
           }
-          to {
+          60% {
             opacity: 1;
-            transform: translateY(0);
+            transform: translateY(5px);
+          }
+          100% {
+            opacity: 1;
             transform: translateY(0);
           }
         }
-        
+
+        .animate-new-word {
+          animation: slideIn 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+        }
+
+        /* Keep other animations the same */
         @keyframes bounce-subtle {
           0%, 100% {
             transform: translateY(0);
@@ -402,15 +409,7 @@ const WordChain = () => {
             transform: translateY(-5px);
           }
         }
-        
-        .animate-bounce-subtle {
-          animation: bounce-subtle 1s ease-in-out;
-        }
-        
-        .animate-fade-in {
-          animation: fadeIn 0.5s ease-in;
-        }
-        
+
         @keyframes fadeIn {
           from {
             opacity: 0;
@@ -426,217 +425,20 @@ const WordChain = () => {
           75% { transform: translateX(8px); }
         }
 
+        .animate-bounce-subtle {
+          animation: bounce-subtle 1s ease-in-out;
+        }
+
+        .animate-fade-in {
+          animation: fadeIn 0.5s ease-in;
+        }
+
         .shake {
           animation: shake 0.3s ease-in-out;
         }
       `}</style>
     </div>
   );
-  // return (
-  //   <div className="max-w-3xl mx-auto p-6 space-y-8">
-  //     {/* Title Section */}
-  //     <div className="text-center transition-all duration-300 hover:scale-105">
-  //       <h1 className="text-4xl font-bold mb-2">Word Chain Game</h1>
-  //       <p className="text-gray-600">Change one letter at a time to reach the target word</p>
-  //     </div>
-
-  //     {/* Game Stats Section */}
-  //     <div className="flex justify-between items-center bg-gray-50 p-4 rounded-lg transition-all duration-300 hover:shadow-lg">
-  //       <div className="transition-all duration-300 hover:scale-105">
-  //         <div className="text-sm text-gray-500">Start Word</div>
-  //         <div className="font-bold text-lg">{moves[0]}</div>
-  //       </div>
-  //       <div className="transition-all duration-300 hover:scale-105">
-  //         <div className="text-sm text-gray-500">Target Word</div>
-  //         <div className="font-bold text-lg">{targetWord}</div>
-  //       </div>
-  //       <div className="transition-all duration-300 hover:scale-105">
-  //         <div className="text-sm text-gray-500">Moves</div>
-  //         <div className="font-bold text-lg">{moves.length - 1}</div>
-  //       </div>
-  //     </div>
-
-  //     {/* Error Message Overlay */}
-  //     <div
-  //       className={`
-  //         fixed top-4 left-1/2 transform -translate-x-1/2
-  //         bg-red-100 text-red-700 px-6 py-3 rounded-lg shadow-lg
-  //         transition-all duration-300 z-50
-  //         ${showError ? 'opacity-100 translate-y-0' : 'opacity-0 -translate-y-full'}
-  //       `}
-  //     >
-  //       {errorMessage}
-  //     </div>
-
-  //     {/* Word Chain Visualization */}
-  //     <div
-  //       ref={chainContainerRef}
-  //       className="overflow-x-auto py-8 scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100"
-  //     >
-  //       <div
-  //         ref={chainContentRef}
-  //         className="flex items-center justify-start space-x-4 min-w-max px-4"
-  //       >
-  //         {moves.map((word, index) => (
-  //           <React.Fragment key={index}>
-  //             <div
-  //               className={`
-  //                 px-4 py-2 rounded-lg font-medium
-  //                 transition-all duration-300
-  //                 ${isNewMove && index === moves.length - 1 ? 'animate-bounce-subtle' : ''}
-  //                 ${word === targetWord
-  //                   ? 'bg-green-100 text-green-800 hover:bg-green-200'
-  //                   : 'bg-blue-100 text-blue-800 hover:bg-blue-200'
-  //                 }
-  //                 transform hover:scale-110
-  //                 hover:shadow-md
-  //               `}
-  //               style={{
-  //                 animation: isNewMove && index === moves.length - 1
-  //                   ? 'slideIn 0.5s ease-out'
-  //                   : 'none'
-  //               }}
-  //             >
-  //               {word}
-  //             </div>
-  //             {index < moves.length - 1 && (
-  //               <ArrowLeft
-  //                 className={`
-  //                   rotate-180 text-gray-400
-  //                   transition-all duration-300
-  //                   ${isNewMove && index === moves.length - 2 ? 'animate-pulse' : ''}
-  //                 `}
-  //                 size={20}
-  //               />
-  //             )}
-  //           </React.Fragment>
-  //         ))}
-  //       </div>
-  //     </div>
-
-  //     {/* Input Controls Section */}
-  //     <div className="space-y-4">
-  //       <div className="flex space-x-2">
-  //         {/* Word Input */}
-  //         <input
-  //           ref={inputRef}
-  //           type="text"
-  //           value={inputValue}
-  //           onChange={(e) => setInputValue(e.target.value.toLowerCase())}
-  //           placeholder="Enter your next word"
-  //           disabled={isComplete || isLoading}
-  //           className={`
-  //             flex-1 px-4 py-2 border rounded-lg 
-  //             focus:outline-none focus:ring-2 focus:ring-blue-500 
-  //             transition-all duration-300
-  //             ${isComplete || isLoading ? 'bg-gray-100' : 'bg-white'}
-  //           `}
-  //           onKeyPress={(e) => {
-  //             if (e.key === 'Enter' && inputValue.trim()) {
-  //               handleNewWord(inputValue.trim());
-  //             }
-  //           }}
-  //         />
-
-  //         {/* Submit Button */}
-  //         <button
-  //           onClick={() => {
-  //             if (inputValue.trim()) {
-  //               handleNewWord(inputValue.trim());
-  //             }
-  //           }}
-  //           disabled={isComplete || isLoading || !inputValue.trim()}
-  //           className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300 hover:scale-105"
-  //           title="Submit (Enter)"
-  //         >
-  //           <Send size={20} />
-  //         </button>
-
-  //         {/* Undo Button */}
-  //         <button
-  //           onClick={handleUndo}
-  //           disabled={moves.length <= 1 || isLoading}
-  //           className="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300 hover:scale-105"
-  //           title="Undo (Shift + Delete)"
-  //         >
-  //           <RotateCcw size={20} />
-  //         </button>
-  //       </div>
-
-  //       {/* Loading Indicator */}
-  //       {isLoading && (
-  //         <div className="text-center text-gray-600 animate-pulse">
-  //           Checking word...
-  //         </div>
-  //       )}
-  //     </div>
-
-  //     {/* Victory Message & New Game Button */}
-  //     {isComplete && (
-  //       <div className="text-center space-y-4 animate-fade-in">
-  //         <div className="text-2xl font-bold text-green-600 animate-bounce-subtle">
-  //           Victory! Completed in {moves.length - 1} moves!
-  //         </div>
-  //         <button
-  //           onClick={startNewGame}
-  //           className="px-6 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-all duration-300 hover:scale-105"
-  //         >
-  //           Play Again
-  //         </button>
-  //       </div>
-  //     )}
-
-  //     {/* Animations */}
-  //     <style jsx>{`
-  //       @keyframes slideIn {
-  //         from {
-  //           opacity: 0;
-  //           transform: translateX(20px);
-  //         }
-  //         to {
-  //           opacity: 1;
-  //           transform: translateX(0);
-  //         }
-  //       }
-
-  //       @keyframes bounce-subtle {
-  //         0%, 100% {
-  //           transform: translateY(0);
-  //         }
-  //         50% {
-  //           transform: translateY(-5px);
-  //         }
-  //       }
-
-  //       .animate-bounce-subtle {
-  //         animation: bounce-subtle 1s ease-in-out;
-  //       }
-
-  //       .animate-fade-in {
-  //         animation: fadeIn 0.5s ease-in;
-  //       }
-
-  //       @keyframes fadeIn {
-  //         from {
-  //           opacity: 0;
-  //         }
-  //         to {
-  //           opacity: 1;
-  //         }
-  //       }
-
-  //       @keyframes shake {
-  //         0%, 100% { transform: translateX(0); }
-  //         25% { transform: translateX(-8px); }
-  //         75% { transform: translateX(8px); }
-  //       }
-
-  //       .shake {
-  //         animation: shake 0.3s ease-in-out;
-  //       }
-  //     `}</style>
-  //   </div>
-  // );
 };
 
 export default WordChain;

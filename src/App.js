@@ -441,16 +441,13 @@ const WordChain = () => {
 
   return (
     <div
-      className="fixed inset-0 bg-white overflow-hidden"
-    // style={{
-    //   height: 'calc(var(--vh, 1vh) * 100)', // Uses custom vh for mobile browsers
-    //   display: 'flex',
-    //   flexDirection: 'column'
-    // }}
+      className="fixed inset-0 bg-white flex flex-col"
+      style={{
+        height: '100dvh', // Use dynamic viewport height
+      }}
     >
-
       {/* Game header - fixed at top */}
-      <div className="absolute top-0 left-0 right-0 z-20 bg-white">
+      <div className="flex-none bg-white z-20">
         <GameHeader
           startWord={moves[0]}
           targetWord={targetWord}
@@ -466,17 +463,9 @@ const WordChain = () => {
 
       {/* Scrollable area for the word chain */}
       <div
-        ref={chainContainerRef} // Reference for scroll management
-        className="absolute inset-0 overflow-y-auto bg-gray-50"
-        style={{
-          top: '116px',
-          bottom: '130px',
-          // paddingBottom: '130px', // Space for input controls
-          // minHeight: '0' // Enables proper flex scrolling
-        }}
+        ref={chainContainerRef}
+        className="flex-1 overflow-y-auto bg-gray-50"
       >
-
-        {/* The actual word chain display */}
         <WordChainDisplay
           moves={moves}
           targetWord={targetWord}
@@ -484,17 +473,14 @@ const WordChain = () => {
         />
       </div>
 
-      {/* Bottom control panel - fixed at bottom */}
+      {/* Bottom control panel */}
       <div
-        className="absolute bottom-0 left-0 right-0 bg-white shadow-lg z-20"
+        className="flex-none bg-white shadow-lg z-20"
         style={{
-          paddingBottom: 'env(safe-area-inset-bottom, 0px)', // iOS safe area
-          // zIndex: 20 // Ensures controls stay above other elements
+          paddingBottom: 'env(safe-area-inset-bottom, 0px)',
         }}
       >
-
         <div className="max-w-2xl mx-auto p-3">
-          {/* Word input controls */}
           <InputControls
             inputRef={inputRef}
             inputValue={inputValue}
@@ -506,14 +492,12 @@ const WordChain = () => {
             moves={moves}
           />
 
-          {/* Loading indicator */}
           {isLoading && (
             <div className="text-center text-gray-600 animate-pulse mt-1 text-sm">
               Checking word...
             </div>
           )}
 
-          {/* Victory message and restart button */}
           {isComplete && (
             <VictoryMessage
               moveCount={moves.length - 1}

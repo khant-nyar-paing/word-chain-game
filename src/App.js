@@ -21,174 +21,128 @@ const SoundEffects = {
 
 // Header component showing game stats
 const GameHeader = ({ startWord, targetWord, moveCount }) => (
-  <div className="flex-none p-2 sm:p-4 bg-white shadow-md z-10">
-    <div className="text-center mb-1 sm:mb-2">
-      <h1 className="text-xl sm:text-2xl font-bold">Word Chain Game</h1>
-    </div>
+  <div className="p-4 bg-white shadow-md">
+    <h1 className="text-2xl font-bold text-center mb-4">Word Chain Game</h1>
 
-    <div className="flex justify-between items-center bg-gray-50 p-2 sm:p-3 rounded-lg text-sm sm:text-base">
+    <div className="flex justify-between bg-gray-50 p-3 rounded-lg">
       <div>
-        <div className="text-xs sm:text-sm text-gray-500">Start</div>
+        <div className="text-sm text-gray-500">Start</div>
         <div className="font-mono font-bold">{startWord}</div>
       </div>
       <div>
-        <div className="text-xs sm:text-sm text-gray-500">Target</div>
+        <div className="text-sm text-gray-500">Target</div>
         <div className="font-mono font-bold">{targetWord}</div>
       </div>
       <div>
-        <div className="text-xs sm:text-sm text-gray-500">Moves</div>
+        <div className="text-sm text-gray-500">Moves</div>
         <div className="font-mono font-bold">{moveCount}</div>
       </div>
     </div>
   </div>
 );
 
-// Letter color
-const getPositionColor = (position) => {
-  // Game-friendly color scheme for up to 8 positions
+
+// Word chain display component
+const getLetterColor = (position) => {
   const colors = {
-    0: {
-      bg: 'bg-rose-100',
-      hover: 'hover:bg-rose-200',
-      border: 'border-rose-200',
-      text: 'text-rose-800'
-    },
-    1: {
-      bg: 'bg-amber-100',
-      hover: 'hover:bg-amber-200',
-      border: 'border-amber-200',
-      text: 'text-amber-800'
-    },
-    2: {
-      bg: 'bg-emerald-100',
-      hover: 'hover:bg-emerald-200',
-      border: 'border-emerald-200',
-      text: 'text-emerald-800'
-    },
-    3: {
-      bg: 'bg-sky-100',
-      hover: 'hover:bg-sky-200',
-      border: 'border-sky-200',
-      text: 'text-sky-800'
-    },
-    4: {
-      bg: 'bg-purple-100',
-      hover: 'hover:bg-purple-200',
-      border: 'border-purple-200',
-      text: 'text-purple-800'
-    },
-    5: {
-      bg: 'bg-orange-100',
-      hover: 'hover:bg-orange-200',
-      border: 'border-orange-200',
-      text: 'text-orange-800'
-    },
-    6: {
-      bg: 'bg-teal-100',
-      hover: 'hover:bg-teal-200',
-      border: 'border-teal-200',
-      text: 'text-teal-800'
-    },
-    7: {
-      bg: 'bg-indigo-100',
-      hover: 'hover:bg-indigo-200',
-      border: 'border-indigo-200',
-      text: 'text-indigo-800'
-    }
+    0: 'bg-rose-100 hover:bg-rose-200 border-rose-200 text-rose-800',
+    1: 'bg-amber-100 hover:bg-amber-200 border-amber-200 text-amber-800',
+    2: 'bg-emerald-100 hover:bg-emerald-200 border-emerald-200 text-emerald-800',
+    3: 'bg-sky-100 hover:bg-sky-200 border-sky-200 text-sky-800',
+    4: 'bg-purple-100 hover:bg-purple-200 border-purple-200 text-purple-800',
+    5: 'bg-orange-100 hover:bg-orange-200 border-orange-200 text-orange-800',
+    6: 'bg-teal-100 hover:bg-teal-200 border-teal-200 text-teal-800',
+    7: 'bg-indigo-100 hover:bg-indigo-200 border-indigo-200 text-indigo-800'
   };
   return colors[position] || colors[0];
 };
 
-// Word chain display component
-const WordChainDisplay = ({ moves, targetWord, isNewMove }) => (
-  <div className="flex flex-col items-center">
-    {moves.map((word, wordIndex) => (
-      <div key={wordIndex} className="flex flex-col items-center">
-        <div className="flex gap-px">
-          {word.split('').map((char, charIndex) => {
-            const positionColors = getPositionColor(charIndex);
-            return (
-              <div
-                key={charIndex}
-                className={`
-                  flex items-center justify-center
-                  w-8 sm:w-10 h-8 sm:h-10
-                  rounded-lg font-mono text-lg
-                  transition-all duration-300
-                  ${isNewMove && wordIndex === moves.length - 1 ? 'animate-new-word' : ''}
-                  ${word === targetWord
-                    ? 'bg-green-100 text-green-800 hover:bg-green-200 border-green-200'
-                    : `${positionColors.bg} ${positionColors.text} ${positionColors.hover} ${positionColors.border}`
-                  }
-                  transform hover:scale-105
-                  border
-                `}
-              >
-                {char}
-              </div>
-            );
-          })}
-        </div>
-        {wordIndex < moves.length - 1 && (
-          <ArrowDown
-            className={`
-              text-gray-300 my-px
-              transition-all duration-300
-              ${isNewMove && wordIndex === moves.length - 2 ? 'animate-pulse' : ''}
-            `}
-            size={12}
-          />
-        )}
-      </div>
-    ))}
+const LetterBlock = ({ char, colorClass }) => (
+  <div className={`w-12 h-12 flex items-center justify-center rounded-lg font-mono text-2xl border ${colorClass}`}>
+    {char}
   </div>
 );
 
-const WordChainDisplay_ = ({ moves, targetWord, isNewMove }) => (
-  <div className="flex flex-col items-center space-y-4 p-2 sm:p-4">
-    {moves.map((word, wordIndex) => (
-      <div key={wordIndex} className="flex flex-col items-center">
-        <div className="flex space-x-1 sm:space-x-2">
-          {word.split('').map((char, charIndex) => (
-            <div
-              key={charIndex}
-              className={`
-                flex items-center justify-center
-                w-8 sm:w-10 h-8 sm:h-10
-                rounded-lg font-mono text-lg
-                transition-all duration-300
-                ${isNewMove && wordIndex === moves.length - 1 ? 'animate-new-word' : ''}
-                ${word === targetWord
-                  ? 'bg-green-100 text-green-800 hover:bg-green-200'
-                  : 'bg-blue-100 text-blue-800 hover:bg-blue-200'
-                }
-                transform hover:scale-105
-                hover:shadow-md
-                border-2 
-                ${word === targetWord ? 'border-green-200' : 'border-blue-200'}
-              `}
-            >
-              {char}
-            </div>
-          ))}
-        </div>
-        {wordIndex < moves.length - 1 && (
-          <ArrowDown
-            className={`
-              text-gray-400 my-2
-              transition-all duration-300
-              ${isNewMove && wordIndex === moves.length - 2 ? 'animate-pulse' : ''}
-            `}
-            size={24}
+const WordBlock = ({ word, isTarget }) => {
+  const targetStyle = 'bg-green-100 hover:bg-green-200 border-green-200 text-green-800';
+
+  return (
+    <div className="flex gap-1">
+      {word.split('').map((char, index) => (
+        <LetterBlock
+          key={index}
+          char={char}
+          colorClass={isTarget ? targetStyle : getLetterColor(index)}
+        />
+      ))}
+    </div>
+  );
+};
+
+const WordChainDisplay = ({ moves, targetWord }) => {
+  return (
+    <div className="flex flex-col items-center">
+      {moves.map((word, index) => (
+        <div key={index} className="flex flex-col items-center">
+          <WordBlock
+            word={word}
+            isTarget={word === targetWord}
           />
-        )}
-      </div>
-    ))}
-  </div>
-);
+
+          {index < moves.length - 1 && (
+            <ArrowDown className="text-gray-300 my-1" size={12} />
+          )}
+        </div>
+      ))}
+    </div>
+  );
+};
 
 // Input controls component
-const InputControls = ({ inputRef, inputValue, setInputValue, isComplete, isLoading, handleNewWord, handleUndo, moves }) => (
+const InputControls = ({ inputRef, inputValue, setInputValue, isComplete, isLoading, handleNewWord, handleUndo, moves }) => {
+  const handleSubmit = () => {
+    if (inputValue.trim()) {
+      handleNewWord(inputValue.trim());
+    }
+  };
+
+  return (
+    <div className="flex gap-2">
+      <input
+        ref={inputRef}
+        type="text"
+        value={inputValue}
+        onChange={(e) => setInputValue(e.target.value.toLowerCase())}
+        placeholder="Enter word"
+        disabled={isComplete || isLoading}
+        className="flex-1 p-2 border rounded-lg font-mono focus:ring focus:ring-blue-500"
+        onKeyDown={(e) => {
+          if (e.key === 'Enter') handleSubmit();
+        }}
+      />
+
+      <button
+        onClick={handleSubmit}
+        disabled={isComplete || isLoading || !inputValue.trim()}
+        className="p-2 rounded-lg bg-blue-600 text-white hover:bg-blue-700 disabled:opacity-50"
+        title="Submit (Enter)"
+      >
+        <Send size={20} />
+      </button>
+
+      <button
+        onClick={handleUndo}
+        disabled={moves.length <= 1 || isLoading}
+        className="p-2 rounded-lg bg-gray-200 text-gray-700 hover:bg-gray-300 disabled:opacity-50"
+        title="Undo (Backspace)"
+      >
+        <RotateCcw size={20} />
+      </button>
+    </div>
+  );
+};
+
+const InputControls_ = ({ inputRef, inputValue, setInputValue, isComplete, isLoading, handleNewWord, handleUndo, moves }) => (
   <div className="flex space-x-2">
     <input
       ref={inputRef}
@@ -212,9 +166,7 @@ const InputControls = ({ inputRef, inputValue, setInputValue, isComplete, isLoad
     />
     <button
       onClick={() => {
-        if (inputValue.trim()) {
-          handleNewWord(inputValue.trim());
-        }
+        if (inputValue.trim()) { handleNewWord(inputValue.trim()); }
       }}
       disabled={isComplete || isLoading || !inputValue.trim()}
       className="px-3 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300"
@@ -250,6 +202,27 @@ const ErrorOverlay = ({ message, show }) => (
 );
 
 // Victory message component
+const VictoryOverlay = ({ moveCount, onPlayAgain, show }) => (
+  <div
+    className={` 
+      fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2
+      bg-green-100 text-green-700 px-6 py-4 rounded-lg shadow-lg
+      transition-all duration-300 z-50 text-center space-y-3
+      ${show ? 'opacity-100 scale-100' : 'opacity-0 scale-75'}
+    `}
+  >
+    <div className="text-lg sm:text-xl font-bold animate-bounce-subtle">
+      Victory! Completed in {moveCount} moves!
+    </div>
+    <button
+      onClick={onPlayAgain}
+      className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-all duration-300"
+    >
+      Play Again
+    </button>
+  </div>
+);
+
 const VictoryMessage = ({ moveCount, onPlayAgain }) => (
   <div className="text-center mt-2 space-y-2 pb-2">
     <div className="text-lg sm:text-xl font-bold text-green-600 animate-bounce-subtle">
@@ -440,14 +413,9 @@ const WordChain = () => {
   };
 
   return (
-    <div
-      className="fixed inset-0 bg-white flex flex-col"
-      style={{
-        height: '100dvh', // Use dynamic viewport height
-      }}
-    >
-      {/* Game header - fixed at top */}
-      <div className="flex-none bg-white z-20">
+    <div className="h-screen flex flex-col">
+
+      <div className="bg-white">
         <GameHeader
           startWord={moves[0]}
           targetWord={targetWord}
@@ -455,17 +423,7 @@ const WordChain = () => {
         />
       </div>
 
-      {/* Error overlay - floats at top of screen when errors occur */}
-      <ErrorOverlay
-        message={errorMessage}
-        show={showError}
-      />
-
-      {/* Scrollable area for the word chain */}
-      <div
-        ref={chainContainerRef}
-        className="flex-1 overflow-y-auto bg-gray-50"
-      >
+      <div className="flex-1 overflow-y-auto bg-gray-50">
         <WordChainDisplay
           moves={moves}
           targetWord={targetWord}
@@ -473,39 +431,29 @@ const WordChain = () => {
         />
       </div>
 
-      {/* Bottom control panel */}
-      <div
-        className="flex-none bg-white shadow-lg z-20"
-        style={{
-          paddingBottom: 'env(safe-area-inset-bottom, 0px)',
-        }}
-      >
-        <div className="max-w-2xl mx-auto p-3">
-          <InputControls
-            inputRef={inputRef}
-            inputValue={inputValue}
-            setInputValue={setInputValue}
-            isComplete={isComplete}
-            isLoading={isLoading}
-            handleNewWord={handleNewWord}
-            handleUndo={handleUndo}
-            moves={moves}
-          />
-
-          {isLoading && (
-            <div className="text-center text-gray-600 animate-pulse mt-1 text-sm">
-              Checking word...
-            </div>
-          )}
-
-          {isComplete && (
-            <VictoryMessage
-              moveCount={moves.length - 1}
-              onPlayAgain={startNewGame}
-            />
-          )}
-        </div>
+      <div className="bg-white shadow-lg p-3">
+        <InputControls
+          inputRef={inputRef}
+          inputValue={inputValue}
+          setInputValue={setInputValue}
+          isComplete={isComplete}
+          isLoading={isLoading}
+          handleNewWord={handleNewWord}
+          handleUndo={handleUndo}
+          moves={moves}
+        />
       </div>
+
+      <ErrorOverlay
+        message={errorMessage}
+        show={showError}
+      />
+
+      <VictoryOverlay
+        moveCount={moves.length - 1}
+        onPlayAgain={startNewGame}
+        show={isComplete}
+      />
 
       {/* Global styles for animations and mobile viewport handling */}
       <style jsx global>{`

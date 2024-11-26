@@ -413,7 +413,7 @@ const WordChain = () => {
   };
 
   return (
-    <div className="h-screen flex flex-col">
+    <div className="min-h-screen flex flex-col">
 
       <div className="bg-white">
         <GameHeader
@@ -431,7 +431,7 @@ const WordChain = () => {
         />
       </div>
 
-      <div className="bg-white shadow-lg p-3">
+      <div className="bg-white shadow-lg p-3 sticky bottom-0">
         <InputControls
           inputRef={inputRef}
           inputValue={inputValue}
@@ -457,9 +457,6 @@ const WordChain = () => {
 
       {/* Global styles for animations and mobile viewport handling */}
       <style jsx global>{`
-        :root {
-          --vh: 1vh;
-        }
 
         @supports (padding: env(safe-area-inset-bottom)) {
           .has-safe-area {

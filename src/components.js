@@ -5,7 +5,7 @@ import { getLetterColor } from './constants';
 // Header component showing game stats
 export const GameHeader = ({ startWord, targetWord, moveCount }) => (
     <div className="p-4 bg-white shadow-md">
-        <h1 className="text-2xl font-bold text-center mb-4">Word Chain Game 2</h1>
+        <h1 className="text-2xl font-bold text-center mb-4">Word Chain Game 3</h1>
 
         <div className="flex justify-between bg-gray-50 p-3 rounded-lg">
             <div>

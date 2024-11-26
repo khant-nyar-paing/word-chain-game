@@ -176,8 +176,8 @@ const WordChain = () => {
 
 
   return (
-    <div className="h-[100dvh] flex flex-col">
-      <div>
+    <div className="h-[100dvh] flex flex-col fixed inset-0">
+      <div className="sticky top-0 bg-white">
         <GameHeader
           startWord={moves[0]}
           targetWord={targetWord}
@@ -193,7 +193,7 @@ const WordChain = () => {
         />
       </div>
 
-      <div className="pb-safe">
+      <div className="sticky bottom-0 pb-safe bg-white">
         <InputControls
           inputRef={inputRef}
           inputValue={inputValue}

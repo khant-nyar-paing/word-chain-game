@@ -75,7 +75,7 @@ const wordPairs = [
   // Nature pairs
   ['grass', 'trees'], // grass -> grabs -> crabs -> crees -> trees
   ['cloud', 'clear'], // cloud -> clout -> float -> fleat -> clear
-  ['mountain', 'valley'], // mountain -> mounting -> mounding -> valley
+  // ['mountain', 'valley'], // mountain -> mounting -> mounding -> valley
 
   // Time pairs
   ['dawn', 'dusk'], // dawn -> down -> dock -> duck -> dusk
@@ -89,7 +89,7 @@ const wordPairs = [
 
   // Weather pairs
   ['warm', 'cool'], // warm -> ward -> word -> wood -> cool
-  ['rain', 'shine'], // rain -> rain -> main -> mine -> shine
+  // ['rain', 'shine'], // rain -> rain -> main -> mine -> shine
   ['storm', 'peace'], // storm -> store -> stare -> space -> peace
 
   // Action pairs

@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { ArrowLeft, RotateCcw, Send } from 'lucide-react';
+import { ArrowDown, RotateCcw, Send } from 'lucide-react';
 import wordPairs from './wordPairs';
 
 const SoundEffects = {
@@ -53,12 +53,18 @@ const WordChain = () => {
   }, [showError]);
 
   // Auto scroll to the latest word
+  // useEffect(() => {
+  //   if (chainContainerRef.current && chainContentRef.current) {
+  //     chainContainerRef.current.scrollTo({
+  //       left: chainContentRef.current.scrollWidth,
+  //       behavior: 'smooth'
+  //     });
+  //   }
+  // }, [moves]);
+
   useEffect(() => {
-    if (chainContainerRef.current && chainContentRef.current) {
-      chainContainerRef.current.scrollTo({
-        left: chainContentRef.current.scrollWidth,
-        behavior: 'smooth'
-      });
+    if (chainContainerRef.current) {
+      chainContainerRef.current.scrollTop = chainContainerRef.current.scrollHeight;
     }
   }, [moves]);
 
@@ -165,26 +171,27 @@ const WordChain = () => {
   };
 
   return (
-    <div className="max-w-3xl mx-auto p-6 space-y-8">
-      {/* Title Section */}
-      <div className="text-center transition-all duration-300 hover:scale-105">
-        <h1 className="text-4xl font-bold mb-2">Word Chain Game</h1>
-        <p className="text-gray-600">Change one letter at a time to reach the target word</p>
-      </div>
+    <div className="h-screen flex flex-col">
+      {/* Header Section - Fixed at top */}
+      <div className="flex-none p-4 bg-white shadow-md">
+        <div className="text-center mb-2">
+          <h1 className="text-2xl font-bold">Word Chain Game</h1>
+        </div>
 
-      {/* Game Stats Section */}
-      <div className="flex justify-between items-center bg-gray-50 p-4 rounded-lg transition-all duration-300 hover:shadow-lg">
-        <div className="transition-all duration-300 hover:scale-105">
-          <div className="text-sm text-gray-500">Start Word</div>
-          <div className="font-bold text-lg">{moves[0]}</div>
-        </div>
-        <div className="transition-all duration-300 hover:scale-105">
-          <div className="text-sm text-gray-500">Target Word</div>
-          <div className="font-bold text-lg">{targetWord}</div>
-        </div>
-        <div className="transition-all duration-300 hover:scale-105">
-          <div className="text-sm text-gray-500">Moves</div>
-          <div className="font-bold text-lg">{moves.length - 1}</div>
+        {/* Game Stats */}
+        <div className="flex justify-between items-center bg-gray-50 p-3 rounded-lg">
+          <div>
+            <div className="text-sm text-gray-500">Start</div>
+            <div className="font-mono font-bold">{moves[0]}</div>
+          </div>
+          <div>
+            <div className="text-sm text-gray-500">Target</div>
+            <div className="font-mono font-bold">{targetWord}</div>
+          </div>
+          <div>
+            <div className="text-sm text-gray-500">Moves</div>
+            <div className="font-mono font-bold">{moves.length - 1}</div>
+          </div>
         </div>
       </div>
 
@@ -200,28 +207,30 @@ const WordChain = () => {
         {errorMessage}
       </div>
 
-      {/* Word Chain Visualization */}
+      {/* Word Chain Visualization - Scrollable middle section */}
       <div
         ref={chainContainerRef}
-        className="overflow-x-auto py-8 scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100"
+        className="flex-1 overflow-y-auto p-4 bg-gray-50"
+        style={{ minHeight: '0' }} // Important for Firefox
       >
         <div
           ref={chainContentRef}
-          className="flex items-center justify-start space-x-4 min-w-max px-4"
+          className="flex flex-col items-center space-y-2"
         >
           {moves.map((word, index) => (
-            <React.Fragment key={index}>
+            <div key={index} className="flex flex-col items-center">
               <div
                 className={`
-                  px-4 py-2 rounded-lg font-medium
+                  px-6 py-3 rounded-lg font-mono text-xl
                   transition-all duration-300
                   ${isNewMove && index === moves.length - 1 ? 'animate-bounce-subtle' : ''}
                   ${word === targetWord
                     ? 'bg-green-100 text-green-800 hover:bg-green-200'
                     : 'bg-blue-100 text-blue-800 hover:bg-blue-200'
                   }
-                  transform hover:scale-110
+                  transform hover:scale-105
                   hover:shadow-md
+                  min-w-[120px] text-center
                 `}
                 style={{
                   animation: isNewMove && index === moves.length - 1
@@ -232,102 +241,100 @@ const WordChain = () => {
                 {word}
               </div>
               {index < moves.length - 1 && (
-                <ArrowLeft
+                <ArrowDown
                   className={`
-                    rotate-180 text-gray-400
+                    text-gray-400 my-1
                     transition-all duration-300
                     ${isNewMove && index === moves.length - 2 ? 'animate-pulse' : ''}
                   `}
-                  size={20}
+                  size={24}
                 />
               )}
-            </React.Fragment>
+            </div>
           ))}
         </div>
       </div>
 
-      {/* Input Controls Section */}
-      <div className="space-y-4">
-        <div className="flex space-x-2">
-          {/* Word Input */}
-          <input
-            ref={inputRef}
-            type="text"
-            value={inputValue}
-            onChange={(e) => setInputValue(e.target.value.toLowerCase())}
-            placeholder="Enter your next word"
-            disabled={isComplete || isLoading}
-            className={`
-              flex-1 px-4 py-2 border rounded-lg 
-              focus:outline-none focus:ring-2 focus:ring-blue-500 
-              transition-all duration-300
-              ${isComplete || isLoading ? 'bg-gray-100' : 'bg-white'}
-            `}
-            onKeyPress={(e) => {
-              if (e.key === 'Enter' && inputValue.trim()) {
-                handleNewWord(inputValue.trim());
-              }
-            }}
-          />
+      {/* Input Controls - Fixed at bottom */}
+      <div className="flex-none p-4 bg-white shadow-lg">
+        <div className="max-w-2xl mx-auto">
+          <div className="flex space-x-2">
+            <input
+              ref={inputRef}
+              type="text"
+              value={inputValue}
+              onChange={(e) => setInputValue(e.target.value.toLowerCase())}
+              placeholder="Enter your next word"
+              disabled={isComplete || isLoading}
+              className={`
+                flex-1 px-4 py-3 border rounded-lg 
+                font-mono text-lg
+                focus:outline-none focus:ring-2 focus:ring-blue-500 
+                transition-all duration-300
+                ${isComplete || isLoading ? 'bg-gray-100' : 'bg-white'}
+              `}
+              onKeyPress={(e) => {
+                if (e.key === 'Enter' && inputValue.trim()) {
+                  handleNewWord(inputValue.trim());
+                }
+              }}
+            />
 
-          {/* Submit Button */}
-          <button
-            onClick={() => {
-              if (inputValue.trim()) {
-                handleNewWord(inputValue.trim());
-              }
-            }}
-            disabled={isComplete || isLoading || !inputValue.trim()}
-            className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300 hover:scale-105"
-            title="Submit (Enter)"
-          >
-            <Send size={20} />
-          </button>
+            <button
+              onClick={() => {
+                if (inputValue.trim()) {
+                  handleNewWord(inputValue.trim());
+                }
+              }}
+              disabled={isComplete || isLoading || !inputValue.trim()}
+              className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300 hover:scale-105"
+              title="Submit (Enter)"
+            >
+              <Send size={24} />
+            </button>
 
-          {/* Undo Button */}
-          <button
-            onClick={handleUndo}
-            disabled={moves.length <= 1 || isLoading}
-            className="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300 hover:scale-105"
-            title="Undo (Shift + Delete)"
-          >
-            <RotateCcw size={20} />
-          </button>
-        </div>
-
-        {/* Loading Indicator */}
-        {isLoading && (
-          <div className="text-center text-gray-600 animate-pulse">
-            Checking word...
+            <button
+              onClick={handleUndo}
+              disabled={moves.length <= 1 || isLoading}
+              className="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300 hover:scale-105"
+              title="Undo (Backspace)"
+            >
+              <RotateCcw size={24} />
+            </button>
           </div>
-        )}
+
+          {isLoading && (
+            <div className="text-center text-gray-600 animate-pulse mt-2">
+              Checking word...
+            </div>
+          )}
+
+          {isComplete && (
+            <div className="text-center mt-2 space-y-2">
+              <div className="text-xl font-bold text-green-600 animate-bounce-subtle">
+                Victory! Completed in {moves.length - 1} moves!
+              </div>
+              <button
+                onClick={startNewGame}
+                className="px-6 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-all duration-300 hover:scale-105"
+              >
+                Play Again
+              </button>
+            </div>
+          )}
+        </div>
       </div>
 
-      {/* Victory Message & New Game Button */}
-      {isComplete && (
-        <div className="text-center space-y-4 animate-fade-in">
-          <div className="text-2xl font-bold text-green-600 animate-bounce-subtle">
-            Victory! Completed in {moves.length - 1} moves!
-          </div>
-          <button
-            onClick={startNewGame}
-            className="px-6 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-all duration-300 hover:scale-105"
-          >
-            Play Again
-          </button>
-        </div>
-      )}
-
-      {/* Animations */}
+      {/* Keep the same style/animation definitions */}
       <style jsx>{`
         @keyframes slideIn {
           from {
             opacity: 0;
-            transform: translateX(20px);
+            transform: translateY(-20px);  /* Changed to vertical animation */
           }
           to {
             opacity: 1;
-            transform: translateX(0);
+            transform: translateY(0);
           }
         }
         
@@ -369,6 +376,211 @@ const WordChain = () => {
       `}</style>
     </div>
   );
+  // return (
+  //   <div className="max-w-3xl mx-auto p-6 space-y-8">
+  //     {/* Title Section */}
+  //     <div className="text-center transition-all duration-300 hover:scale-105">
+  //       <h1 className="text-4xl font-bold mb-2">Word Chain Game</h1>
+  //       <p className="text-gray-600">Change one letter at a time to reach the target word</p>
+  //     </div>
+
+  //     {/* Game Stats Section */}
+  //     <div className="flex justify-between items-center bg-gray-50 p-4 rounded-lg transition-all duration-300 hover:shadow-lg">
+  //       <div className="transition-all duration-300 hover:scale-105">
+  //         <div className="text-sm text-gray-500">Start Word</div>
+  //         <div className="font-bold text-lg">{moves[0]}</div>
+  //       </div>
+  //       <div className="transition-all duration-300 hover:scale-105">
+  //         <div className="text-sm text-gray-500">Target Word</div>
+  //         <div className="font-bold text-lg">{targetWord}</div>
+  //       </div>
+  //       <div className="transition-all duration-300 hover:scale-105">
+  //         <div className="text-sm text-gray-500">Moves</div>
+  //         <div className="font-bold text-lg">{moves.length - 1}</div>
+  //       </div>
+  //     </div>
+
+  //     {/* Error Message Overlay */}
+  //     <div
+  //       className={`
+  //         fixed top-4 left-1/2 transform -translate-x-1/2
+  //         bg-red-100 text-red-700 px-6 py-3 rounded-lg shadow-lg
+  //         transition-all duration-300 z-50
+  //         ${showError ? 'opacity-100 translate-y-0' : 'opacity-0 -translate-y-full'}
+  //       `}
+  //     >
+  //       {errorMessage}
+  //     </div>
+
+  //     {/* Word Chain Visualization */}
+  //     <div
+  //       ref={chainContainerRef}
+  //       className="overflow-x-auto py-8 scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100"
+  //     >
+  //       <div
+  //         ref={chainContentRef}
+  //         className="flex items-center justify-start space-x-4 min-w-max px-4"
+  //       >
+  //         {moves.map((word, index) => (
+  //           <React.Fragment key={index}>
+  //             <div
+  //               className={`
+  //                 px-4 py-2 rounded-lg font-medium
+  //                 transition-all duration-300
+  //                 ${isNewMove && index === moves.length - 1 ? 'animate-bounce-subtle' : ''}
+  //                 ${word === targetWord
+  //                   ? 'bg-green-100 text-green-800 hover:bg-green-200'
+  //                   : 'bg-blue-100 text-blue-800 hover:bg-blue-200'
+  //                 }
+  //                 transform hover:scale-110
+  //                 hover:shadow-md
+  //               `}
+  //               style={{
+  //                 animation: isNewMove && index === moves.length - 1
+  //                   ? 'slideIn 0.5s ease-out'
+  //                   : 'none'
+  //               }}
+  //             >
+  //               {word}
+  //             </div>
+  //             {index < moves.length - 1 && (
+  //               <ArrowLeft
+  //                 className={`
+  //                   rotate-180 text-gray-400
+  //                   transition-all duration-300
+  //                   ${isNewMove && index === moves.length - 2 ? 'animate-pulse' : ''}
+  //                 `}
+  //                 size={20}
+  //               />
+  //             )}
+  //           </React.Fragment>
+  //         ))}
+  //       </div>
+  //     </div>
+
+  //     {/* Input Controls Section */}
+  //     <div className="space-y-4">
+  //       <div className="flex space-x-2">
+  //         {/* Word Input */}
+  //         <input
+  //           ref={inputRef}
+  //           type="text"
+  //           value={inputValue}
+  //           onChange={(e) => setInputValue(e.target.value.toLowerCase())}
+  //           placeholder="Enter your next word"
+  //           disabled={isComplete || isLoading}
+  //           className={`
+  //             flex-1 px-4 py-2 border rounded-lg 
+  //             focus:outline-none focus:ring-2 focus:ring-blue-500 
+  //             transition-all duration-300
+  //             ${isComplete || isLoading ? 'bg-gray-100' : 'bg-white'}
+  //           `}
+  //           onKeyPress={(e) => {
+  //             if (e.key === 'Enter' && inputValue.trim()) {
+  //               handleNewWord(inputValue.trim());
+  //             }
+  //           }}
+  //         />
+
+  //         {/* Submit Button */}
+  //         <button
+  //           onClick={() => {
+  //             if (inputValue.trim()) {
+  //               handleNewWord(inputValue.trim());
+  //             }
+  //           }}
+  //           disabled={isComplete || isLoading || !inputValue.trim()}
+  //           className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300 hover:scale-105"
+  //           title="Submit (Enter)"
+  //         >
+  //           <Send size={20} />
+  //         </button>
+
+  //         {/* Undo Button */}
+  //         <button
+  //           onClick={handleUndo}
+  //           disabled={moves.length <= 1 || isLoading}
+  //           className="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300 hover:scale-105"
+  //           title="Undo (Shift + Delete)"
+  //         >
+  //           <RotateCcw size={20} />
+  //         </button>
+  //       </div>
+
+  //       {/* Loading Indicator */}
+  //       {isLoading && (
+  //         <div className="text-center text-gray-600 animate-pulse">
+  //           Checking word...
+  //         </div>
+  //       )}
+  //     </div>
+
+  //     {/* Victory Message & New Game Button */}
+  //     {isComplete && (
+  //       <div className="text-center space-y-4 animate-fade-in">
+  //         <div className="text-2xl font-bold text-green-600 animate-bounce-subtle">
+  //           Victory! Completed in {moves.length - 1} moves!
+  //         </div>
+  //         <button
+  //           onClick={startNewGame}
+  //           className="px-6 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-all duration-300 hover:scale-105"
+  //         >
+  //           Play Again
+  //         </button>
+  //       </div>
+  //     )}
+
+  //     {/* Animations */}
+  //     <style jsx>{`
+  //       @keyframes slideIn {
+  //         from {
+  //           opacity: 0;
+  //           transform: translateX(20px);
+  //         }
+  //         to {
+  //           opacity: 1;
+  //           transform: translateX(0);
+  //         }
+  //       }
+
+  //       @keyframes bounce-subtle {
+  //         0%, 100% {
+  //           transform: translateY(0);
+  //         }
+  //         50% {
+  //           transform: translateY(-5px);
+  //         }
+  //       }
+
+  //       .animate-bounce-subtle {
+  //         animation: bounce-subtle 1s ease-in-out;
+  //       }
+
+  //       .animate-fade-in {
+  //         animation: fadeIn 0.5s ease-in;
+  //       }
+
+  //       @keyframes fadeIn {
+  //         from {
+  //           opacity: 0;
+  //         }
+  //         to {
+  //           opacity: 1;
+  //         }
+  //       }
+
+  //       @keyframes shake {
+  //         0%, 100% { transform: translateX(0); }
+  //         25% { transform: translateX(-8px); }
+  //         75% { transform: translateX(8px); }
+  //       }
+
+  //       .shake {
+  //         animation: shake 0.3s ease-in-out;
+  //       }
+  //     `}</style>
+  //   </div>
+  // );
 };
 
 export default WordChain;

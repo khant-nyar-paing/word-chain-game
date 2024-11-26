@@ -55,18 +55,6 @@ const WordChain = () => {
     }
   }, [showError]);
 
-  // Sets up keyboard shortcuts for the game. Shift + Delete: Undo last move. 
-  useEffect(() => {
-    const handleKeyDown = (e) => {
-      if (e.key === 'Delete' && e.shiftKey && !isComplete && !isLoading) {
-        e.preventDefault();
-        handleUndo();
-      }
-    };
-    window.addEventListener('keydown', handleKeyDown);
-    return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [inputValue, isComplete, isLoading]);
-
   // Plays a sound effect
   const playSound = (audioRef) => {
     audioRef.current.currentTime = 0;
@@ -167,7 +155,7 @@ const WordChain = () => {
 
   return (
     <div className="h-[100dvh] flex flex-col fixed inset-0">
-      <div className="sticky top-0 bg-white">
+      <div className="sticky top-0 z-10 bg-white">
         <GameHeader
           startWord={moves[0]}
           targetWord={targetWord}
@@ -175,15 +163,17 @@ const WordChain = () => {
         />
       </div>
 
-      <div className="flex-1 overflow-y-auto relative flex flex-col justify-end">
-        <WordChainDisplay
-          moves={moves}
-          targetWord={targetWord}
-          isNewMove={isNewMove}
-        />
+      <div className="flex-1 overflow-y-auto relative">
+        <div className="min-h-full py-4">
+          <WordChainDisplay
+            moves={moves}
+            targetWord={targetWord}
+            isNewMove={isNewMove}
+          />
+        </div>
       </div>
 
-      <div className="sticky bottom-0 pb-safe bg-white">
+      <div className="sticky bottom-0 z-10 pb-safe bg-white p-2">
         <InputControls
           inputRef={inputRef}
           inputValue={inputValue}

@@ -5,7 +5,7 @@ import { getLetterColor } from './constants';
 // Header component showing game stats
 export const GameHeader = ({ startWord, targetWord, moveCount }) => (
     <div className="p-4 bg-white shadow-md">
-        <h1 className="text-2xl font-bold text-center mb-4">Word Chain Game 7</h1>
+        <h1 className="text-2xl font-bold text-center mb-4">Word Chain Game 8</h1>
 
         <div className="flex justify-between bg-gray-50 p-3 rounded-lg">
             <div>
@@ -25,7 +25,7 @@ export const GameHeader = ({ startWord, targetWord, moveCount }) => (
 );
 
 // Word chain display component
-export const WordChainDisplay = ({ moves, targetWord }) => {
+export const WordChainDisplay = ({ moves, targetWord, isNewMove }) => {
     const endOfListRef = useRef(null);
     const targetStyle = 'bg-green-100 hover:bg-green-200 border-green-200 text-green-800';
 
@@ -34,10 +34,11 @@ export const WordChainDisplay = ({ moves, targetWord }) => {
     }, [moves]);
 
     return (
+
         <div className="flex flex-col items-center py-4">
             {moves.map((word, index) => (
                 <div key={index} className="flex flex-col items-center">
-                    <div className="flex gap-1 animate-new-word">
+                    <div className={`flex gap-1 ${index === moves.length - 1 && isNewMove ? 'animate-new-word' : ''}`}>
                         {word.split('').map((char, index) => (
                             <div className={`w-12 h-12 flex items-center justify-center rounded-lg font-mono text-2xl border ${word === targetWord ? targetStyle : getLetterColor(index)}`}>
                                 {char}
@@ -45,7 +46,7 @@ export const WordChainDisplay = ({ moves, targetWord }) => {
                         ))}
                     </div>
                     {index < moves.length - 1 && (
-                        <ArrowDown className="text-gray-300 my-2 animate-pulse" size={12} />
+                        <ArrowDown className="text-gray-300 my-2" size={12} />
                     )}
                 </div>
             ))}

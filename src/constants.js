@@ -5,7 +5,6 @@ export const SoundEffects = {
     ERROR: '/sounds/Error.wav',
     VICTORY: '/sounds/LoadSave.wav',
     UNDO: '/sounds/Close.wav',
-    INVALID: '/sounds/Error.wav'
 };
 
 // Color mapping for letter blocks

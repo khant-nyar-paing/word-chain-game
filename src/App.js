@@ -24,8 +24,8 @@ const WordChain = () => {
   const [showError, setShowError] = useState(false);
 
   const inputRef = useRef(null);
-  const chainContainerRef = useRef(null);
-  const chainContentRef = useRef(null);
+  // const chainContainerRef = useRef(null);
+  // const chainContentRef = useRef(null);
 
   // Audio refs
   const startAudioRef = useRef(new Audio(SoundEffects.START));
@@ -33,7 +33,6 @@ const WordChain = () => {
   const errorAudioRef = useRef(new Audio(SoundEffects.ERROR));
   const victoryAudioRef = useRef(new Audio(SoundEffects.VICTORY));
   const undoAudioRef = useRef(new Audio(SoundEffects.UNDO));
-  const invalidAudioRef = useRef(new Audio(SoundEffects.INVALID));
 
   // Initialize the game when the component mounts. This effect runs once when the component is first rendered.
   useEffect(() => {

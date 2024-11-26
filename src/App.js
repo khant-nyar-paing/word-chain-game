@@ -22,7 +22,7 @@ const SoundEffects = {
 // Header component showing game stats
 const GameHeader = ({ startWord, targetWord, moveCount }) => (
   <div className="p-4 bg-white shadow-md">
-    <h1 className="text-2xl font-bold text-center mb-4">Word Chain Game</h1>
+    <h1 className="text-2xl font-bold text-center mb-4">Word Chain Game 1</h1>
 
     <div className="flex justify-between bg-gray-50 p-3 rounded-lg">
       <div>
@@ -302,17 +302,6 @@ const WordChain = () => {
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, [inputValue, isComplete, isLoading]);
-
-  // Handles mobile viewport height adjustments. Calculating the true viewport height, Setting a CSS custom property (--vh), Updating on resize events
-  useEffect(() => {
-    const adjustViewportHeight = () => {
-      const vh = window.innerHeight * 0.01;
-      document.documentElement.style.setProperty('--vh', `${vh}px`);
-    };
-    adjustViewportHeight(); // Run once on mount
-    window.addEventListener('resize', adjustViewportHeight); // Add event listener
-    return () => window.removeEventListener('resize', adjustViewportHeight);
-  }, []);
 
   // Plays a sound effect
   const playSound = (audioRef) => {

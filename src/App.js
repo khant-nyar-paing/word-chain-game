@@ -165,19 +165,9 @@ const WordChain = () => {
     }
   };
 
-
-
-
-
-
-
-
-
-
-
   return (
-    <div className="fixed top-0 left-0 right-0 bottom-0 flex flex-col">
-      <div className="fixed top-0 left-0 right-0 bg-white z-10">
+    <div className="h-[100dvh] flex flex-col fixed inset-0">
+      <div className="sticky top-0 bg-white">
         <GameHeader
           startWord={moves[0]}
           targetWord={targetWord}
@@ -185,7 +175,7 @@ const WordChain = () => {
         />
       </div>
 
-      <div className="flex-1 overflow-y-auto mt-[header-height] mb-[input-height]">
+      <div className="flex-1 overflow-y-auto relative flex flex-col justify-end">
         <WordChainDisplay
           moves={moves}
           targetWord={targetWord}
@@ -193,7 +183,7 @@ const WordChain = () => {
         />
       </div>
 
-      <div className="fixed bottom-0 left-0 right-0 bg-white z-10">
+      <div className="sticky bottom-0 pb-safe bg-white">
         <InputControls
           inputRef={inputRef}
           inputValue={inputValue}

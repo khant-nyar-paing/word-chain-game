@@ -5,7 +5,7 @@ import { getLetterColor } from './constants';
 // Header component showing game stats
 export const GameHeader = ({ startWord, targetWord, moveCount }) => (
     <div className="p-4 bg-white shadow-md">
-        <h1 className="text-2xl font-bold text-center mb-4">Word Chain Game 6</h1>
+        <h1 className="text-2xl font-bold text-center mb-4">Word Chain Game 7</h1>
 
         <div className="flex justify-between bg-gray-50 p-3 rounded-lg">
             <div>
@@ -25,30 +25,9 @@ export const GameHeader = ({ startWord, targetWord, moveCount }) => (
 );
 
 // Word chain display component
-const LetterBlock = ({ char, colorClass }) => (
-    <div className={`w-12 h-12 flex items-center justify-center rounded-lg font-mono text-2xl border ${colorClass}`}>
-        {char}
-    </div>
-);
-
-const WordBlock = ({ word, isTarget }) => {
-    const targetStyle = 'bg-green-100 hover:bg-green-200 border-green-200 text-green-800';
-
-    return (
-        <div className="flex gap-1">
-            {word.split('').map((char, index) => (
-                <LetterBlock
-                    key={index}
-                    char={char}
-                    colorClass={isTarget ? targetStyle : getLetterColor(index)}
-                />
-            ))}
-        </div>
-    );
-};
-
 export const WordChainDisplay = ({ moves, targetWord }) => {
     const endOfListRef = useRef(null);
+    const targetStyle = 'bg-green-100 hover:bg-green-200 border-green-200 text-green-800';
 
     useEffect(() => {
         endOfListRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -58,13 +37,15 @@ export const WordChainDisplay = ({ moves, targetWord }) => {
         <div className="flex flex-col items-center py-4">
             {moves.map((word, index) => (
                 <div key={index} className="flex flex-col items-center">
-                    <WordBlock
-                        word={word}
-                        isTarget={word === targetWord}
-                    />
-
+                    <div className="flex gap-1 animate-new-word">
+                        {word.split('').map((char, index) => (
+                            <div className={`w-12 h-12 flex items-center justify-center rounded-lg font-mono text-2xl border ${word === targetWord ? targetStyle : getLetterColor(index)}`}>
+                                {char}
+                            </div>
+                        ))}
+                    </div>
                     {index < moves.length - 1 && (
-                        <ArrowDown className="text-gray-300 my-2" size={12} />
+                        <ArrowDown className="text-gray-300 my-2 animate-pulse" size={12} />
                     )}
                 </div>
             ))}
@@ -130,7 +111,9 @@ export const ErrorOverlay = ({ message, show }) => (
 export const VictoryOverlay = ({ moveCount, onPlayAgain, show }) => (
     show ? (
         <div className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-green-100 text-green-700 p-4 rounded-lg shadow-md text-center">
-            <div className="font-bold mb-3">Victory! Completed in {moveCount} moves!</div>
+            <div className="font-bold mb-3 animate-bounce-subtle">
+                Victory! Completed in {moveCount} moves!
+            </div>
             <button
                 onClick={onPlayAgain}
                 className="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700"

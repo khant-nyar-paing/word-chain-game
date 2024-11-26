@@ -1,3 +1,4 @@
+
 const wordPairs = [
   // 3 letter words
   ['cat', 'dog'], // cat -> cot -> dog

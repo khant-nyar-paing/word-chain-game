@@ -5,7 +5,7 @@
  */
 
 import React, { useState, useEffect, useRef } from 'react';
-import wordPairs from './wordpairs';
+import wordPairs from './wordPairs';
 import { GameHeader, WordChainDisplay, InputControls, ErrorOverlay, VictoryOverlay } from './components';
 import { SoundEffects } from './constants';
 import './styles.css';

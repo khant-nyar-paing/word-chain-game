@@ -243,7 +243,7 @@ function WordChain() {
       style={{
         display: "flex", // Defines the container as a flexbox,
         flexDirection: "column", // Stacks the flex items vertically from top to bottom
-        height: "calc(100vh - env(safe-area-inset-bottom))", // Sets the height of the container to 100% of the viewport height
+        height: "100dvh", // Sets the height of the container to 100% of the viewport height
       }}
     >
       {/* Header Section */}

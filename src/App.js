@@ -211,9 +211,6 @@ function WordChain() {
   // useRef hook to reference the last div in the text blocks list
   const endOfListRef = useRef(null); // This will be used to scroll to the bottom of the list when a new block is added
 
-  // For keyboard avoiding view
-  const [isKeyboardVisible, setIsKeyboardVisible] = useState(false);
-
   // Dynamic viewport height
   const [viewportHeight, setViewportHeight] = useState(window.innerHeight);
 
@@ -223,17 +220,6 @@ function WordChain() {
     window.addEventListener("resize", handleResize);
     return () => window.removeEventListener("resize", handleResize);
   }, []);
-
-  // Listen for keyboard visibility changes
-  useEffect(() => {
-    const handleResize = () => {
-      setIsKeyboardVisible(window.innerHeight < 500); // You can adjust the threshold
-    };
-
-    window.addEventListener("resize", handleResize);
-    return () => window.removeEventListener("resize", handleResize);
-  }, []);
-
 
   // Handles changes in the input field and updates the state
   const handleInputChange = (event) => {

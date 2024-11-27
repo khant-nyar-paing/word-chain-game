@@ -6,7 +6,6 @@ import { getLetterColor } from './constants';
 export const GameHeader = ({ startWord, targetWord, moveCount }) => (
     <div className="p-4 bg-white shadow-md">
         <h1 className="text-2xl font-bold text-center mb-4">Word Chain Game 8</h1>
-
         <div className="flex justify-between bg-gray-50 p-3 rounded-lg">
             <div>
                 <div className="text-sm text-gray-500">Start</div>
@@ -25,7 +24,57 @@ export const GameHeader = ({ startWord, targetWord, moveCount }) => (
 );
 
 // Word chain display component
+const LetterBox = ({ char, isTarget, letterIndex }) => {
+    const targetStyle = 'bg-green-100 hover:bg-green-200 border-green-200 text-green-800';
+
+    return (
+        <div className={`w-12 h-12 flex items-center justify-center rounded-lg font-mono text-2xl border 
+            ${isTarget ? targetStyle : getLetterColor(letterIndex)}`}>
+            {char}
+        </div>
+    );
+};
+
+const WordBlock = ({ word, isTarget, isLast, isNewMove }) => (
+    <div className="flex flex-col items-center">
+        <div className={`flex gap-1 ${isLast && isNewMove ? 'animate-new-word' : ''}`}>
+            {word.split('').map((char, index) => (
+                <LetterBox
+                    key={index}
+                    char={char}
+                    isTarget={isTarget}
+                    letterIndex={index}
+                />
+            ))}
+        </div>
+        {!isLast && <ArrowDown className="text-gray-300 my-2" size={12} />}
+    </div>
+);
+
 export const WordChainDisplay = ({ moves, targetWord, isNewMove }) => {
+    const endOfListRef = useRef(null);
+
+    useEffect(() => {
+        endOfListRef.current?.scrollIntoView({ behavior: 'smooth' });
+    }, [moves]);
+
+    return (
+        <div className="flex flex-col items-center py-4">
+            {moves.map((word, index) => (
+                <WordBlock
+                    key={index}
+                    word={word}
+                    isTarget={word === targetWord}
+                    isLast={index === moves.length - 1}
+                    isNewMove={isNewMove}
+                />
+            ))}
+            <div ref={endOfListRef} />
+        </div>
+    );
+};
+
+export const WordChainDisplay_ = ({ moves, targetWord, isNewMove }) => {
     const endOfListRef = useRef(null);
     const targetStyle = 'bg-green-100 hover:bg-green-200 border-green-200 text-green-800';
 
@@ -34,7 +83,6 @@ export const WordChainDisplay = ({ moves, targetWord, isNewMove }) => {
     }, [moves]);
 
     return (
-
         <div className="flex flex-col items-center py-4">
             {moves.map((word, index) => (
                 <div key={index} className="flex flex-col items-center">

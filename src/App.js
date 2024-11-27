@@ -10,7 +10,7 @@ import { GameHeader, WordChainDisplay, InputControls, ErrorOverlay, VictoryOverl
 import { SoundEffects } from './constants';
 import './styles.css';
 
-const WordChain = () => {
+const WordChain_ = () => {
 
   // Game state declarations
   const [currentWord, setCurrentWord] = useState('');
@@ -199,5 +199,132 @@ const WordChain = () => {
     </div>
   );
 };
+
+
+function WordChain() {
+  // State hook for tracking the current value of the input field
+  const [inputValue, setInputValue] = useState(""); // Initializes the input field with an empty string
+
+  // State hook for storing the list of text blocks
+  const [textBlocks, setTextBlocks] = useState([]); // Initializes the text blocks as an empty array
+
+  // useRef hook to reference the last div in the text blocks list
+  const endOfListRef = useRef(null); // This will be used to scroll to the bottom of the list when a new block is added
+
+  // Handles changes in the input field and updates the state
+  const handleInputChange = (event) => {
+    setInputValue(event.target.value); // Updates the inputValue state with the new text typed in the input
+  };
+
+  // Handles submission when the "Send" button is clicked or Enter key is pressed
+  const handleSubmit = () => {
+    if (inputValue.trim() !== "") {
+      setTextBlocks([...textBlocks, inputValue]); // Adds the new input value to the textBlocks array
+      setInputValue(""); // Clears the input field after submitting
+    }
+  };
+
+  // Handles the "Enter" key press and submits the text when Enter is pressed
+  const handleKeyPress = (event) => {
+    if (event.key === "Enter") {
+      handleSubmit(); // Calls the handleSubmit function if Enter key is pressed
+    }
+  };
+
+  // useEffect hook to scroll to the bottom when new text is added
+  useEffect(() => {
+    if (endOfListRef.current) {
+      endOfListRef.current.scrollIntoView({ behavior: "smooth" }); // Smooth scroll to the last element in the text blocks
+    }
+  }, [textBlocks]); // This effect runs whenever the textBlocks state changes (i.e., when a new block is added)
+
+  return (
+    <div style={{ display: "flex", flexDirection: "column", height: "100vh" }}>
+      {/* Header Section */}
+      <header
+        style={{
+          backgroundColor: "#4CAF50", // Sets the background color of the header
+          color: "white", // Sets the text color to white
+          padding: "10px", // Adds padding inside the header
+          textAlign: "center", // Centers the text horizontally
+          flexShrink: 0, // Prevents the header from shrinking when the window is resized
+        }}
+      >
+        <h1>Header</h1>
+      </header>
+
+      {/* Main Content Section with Scrollable Text Blocks */}
+      <main
+        style={{
+          flexGrow: 1, // Allows the main content to take up the remaining space
+          padding: "20px", // Adds padding inside the main content area
+          display: "flex", // Makes the main content a flex container
+          flexDirection: "column", // Arranges text blocks vertically
+          gap: "10px", // Adds space between text blocks
+          justifyContent: "flex-start", // Aligns items at the start of the container (top)
+          overflowY: "auto", // Enables vertical scrolling if content overflows
+          maxHeight: "calc(100vh - 140px)", // Restricts the height to fit within the available space (considering header and footer)
+        }}
+      >
+        {
+          // Displays all the text blocks from the textBlocks array
+          textBlocks.map((block, index) => (
+            <div
+              key={index} // Uses index as key for each text block (ensures unique identification)
+              style={{
+                padding: "10px", // Adds padding inside each text block
+                border: "1px solid #ddd", // Adds a light gray border around each text block
+                borderRadius: "5px", // Rounds the corners of the border
+              }}
+            >
+              {block} {/* Displays the actual text in the block */}
+            </div>
+          ))
+        }
+        {/* Div placed at the end of the list for scrolling to it */}
+        <div ref={endOfListRef}></div>
+      </main>
+
+      {/* Footer Section containing input field and button */}
+      <footer
+        style={{
+          backgroundColor: "#f1f1f1", // Sets the background color of the footer
+          padding: "10px", // Adds padding inside the footer
+          textAlign: "center", // Centers the content in the footer
+          flexShrink: 0, // Prevents the footer from shrinking
+        }}
+      >
+        {/* Text input field for typing new messages */}
+        <input
+          type="text" // Specifies it's a text input field
+          value={inputValue} // Binds the value of the input to the inputValue state
+          onChange={handleInputChange} // Calls handleInputChange when text is typed
+          onKeyDown={handleKeyPress} // Calls handleKeyPress when a key is pressed in the input
+          placeholder="Enter text here" // Placeholder text to show when the input is empty
+          style={{
+            width: "70%", // Sets the input field width to 70% of the container
+            padding: "10px", // Adds padding inside the input field
+            marginRight: "10px", // Adds space to the right of the input field
+            borderRadius: "5px", // Rounds the corners of the input field
+          }}
+        />
+        {/* Send Button */}
+        <button
+          onClick={handleSubmit} // Calls handleSubmit when the button is clicked
+          style={{
+            padding: "10px 20px", // Adds padding inside the button
+            backgroundColor: "#4CAF50", // Sets the background color of the button
+            color: "white", // Sets the text color of the button
+            border: "none", // Removes the default border of the button
+            borderRadius: "5px", // Rounds the corners of the button
+            cursor: "pointer", // Changes the cursor to pointer when hovering over the button
+          }}
+        >
+          Send {/* Button text */}
+        </button>
+      </footer>
+    </div>
+  );
+}
 
 export default WordChain;

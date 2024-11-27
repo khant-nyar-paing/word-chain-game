@@ -243,7 +243,7 @@ function WordChain() {
       style={{
         display: "flex", // Defines the container as a flexbox,
         flexDirection: "column", // Stacks the flex items vertically from top to bottom
-        height: "100dvh", // Sets the height of the container to 100% of the viewport height
+        height: "100dvh", // Sets the height of the container to 100% of the dynamic viewport height (not vh)
       }}
     >
       {/* Header Section */}
@@ -254,9 +254,14 @@ function WordChain() {
           padding: "10px", // Adds padding inside the header
           textAlign: "center", // Centers the text horizontally
           flexShrink: 0, // Prevents the header from shrinking when the window is resized
+          position: "fixed",
+          top: 0,
+          left: 0,
+          width: "100%",
+          zIndex: 10,
         }}
       >
-        <h1>Header Deployed at 11:28</h1>
+        <h1>Header</h1>
       </header>
 
       {/* Main Content Section with Scrollable Text Blocks */}
@@ -264,6 +269,7 @@ function WordChain() {
         style={{
           flexGrow: 1, // Allows the main content to take up the remaining space
           padding: "20px", // Adds padding inside the main content area
+          marginTop: "60px",
           display: "flex", // Makes the main content a flex container
           flexDirection: "column", // Arranges text blocks vertically
           gap: "10px", // Adds space between text blocks
@@ -274,18 +280,6 @@ function WordChain() {
       >
         {
           // Displays all the text blocks from the textBlocks array
-          textBlocks.map((block, index) => (
-            <div
-              key={index} // Uses index as key for each text block (ensures unique identification)
-              style={{
-                padding: "10px", // Adds padding inside each text block
-                border: "1px solid #ddd", // Adds a light gray border around each text block
-                borderRadius: "5px", // Rounds the corners of the border
-              }}
-            >
-              {block} {/* Displays the actual text in the block */}
-            </div>
-          ))
         }
         {/* Div placed at the end of the list for scrolling to it */}
         <div ref={endOfListRef}></div>
@@ -334,3 +328,16 @@ function WordChain() {
 }
 
 export default WordChain;
+
+// textBlocks.map((block, index) => (
+//   <div
+//     key={index} // Uses index as key for each text block (ensures unique identification)
+//     style={{
+//       padding: "10px", // Adds padding inside each text block
+//       border: "1px solid #ddd", // Adds a light gray border around each text block
+//       borderRadius: "5px", // Rounds the corners of the border
+//     }}
+//   >
+//     {block} {/* Displays the actual text in the block */}
+//   </div>
+// ))

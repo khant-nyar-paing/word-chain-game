@@ -276,7 +276,8 @@ const WordChain = () => {
         backgroundColor: "#f1f1f1",
         padding: "10px",
         textAlign: "center",
-        zIndex: 2
+        zIndex: 2,
+        marginBottom: `calc(20px + env(keyboard-inset-height))`
       }}>
         <input
           type="text"
@@ -304,8 +305,8 @@ const WordChain = () => {
         >
           Send
         </button>
-      </footer>
-    </div>
+      </footer >
+    </div >
   );
 };
 

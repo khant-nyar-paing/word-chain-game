@@ -286,7 +286,7 @@ function WordChain() {
           justifyContent: "flex-start", // Aligns items at the start of the container (top)
           overflowY: "scroll", // Enables vertical scrolling if content overflows
           // maxHeight: "calc(100vh - 140px)", // Restricts the height to fit within the available space (considering header and footer)
-          maxHeight: `calc(${viewportHeight}px - 140px)`, // Adjust content area height based on dynamic viewport height
+          maxHeight: `calc(${viewportHeight}px - 500px)`, // Adjust content area height based on dynamic viewport height
         }}
       >
         {

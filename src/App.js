@@ -209,8 +209,119 @@ const WordChain_ = () => {
 
 
 
-
 const WordChain = () => {
+  const [inputValue, setInputValue] = useState("");
+  const [textBlocks, setTextBlocks] = useState([]);
+  const endOfListRef = useRef(null);
+
+  const handleSubmit = () => {
+    if (inputValue.trim()) {
+      setTextBlocks([...textBlocks, inputValue]);
+      setInputValue("");
+      endOfListRef.current?.scrollIntoView({ behavior: "smooth" });
+    }
+  };
+
+  return (
+    <div style={{
+      position: 'fixed',
+      top: 0,
+      left: 0,
+      right: 0,
+      bottom: 0,
+      overflow: 'hidden',
+      display: 'flex',
+      flexDirection: 'column'
+    }}>
+      <header style={{
+        position: 'fixed',
+        top: 0,
+        left: 0,
+        right: 0,
+        backgroundColor: "#4CAF50",
+        color: "white",
+        padding: "10px",
+        textAlign: "center",
+        zIndex: 2
+      }}>
+        <h1>Header</h1>
+      </header>
+
+      <main style={{
+        marginTop: "60px",
+        marginBottom: "60px",
+        overflowY: "auto",
+        flex: 1,
+        padding: "20px",
+        WebkitOverflowScrolling: "touch"
+      }}>
+        {textBlocks.map((text, index) => (
+          <div key={index} style={{
+            backgroundColor: "#f8f9fa",
+            padding: "10px",
+            borderRadius: "5px",
+            marginBottom: "10px"
+          }}>
+            {text}
+          </div>
+        ))}
+        <div ref={endOfListRef} />
+      </main>
+
+      <footer style={{
+        position: 'fixed',
+        bottom: 0,
+        left: 0,
+        right: 0,
+        backgroundColor: "#f1f1f1",
+        padding: "10px",
+        textAlign: "center",
+        zIndex: 2
+      }}>
+        <input
+          type="text"
+          value={inputValue}
+          onChange={(e) => setInputValue(e.target.value)}
+          onKeyDown={(e) => e.key === "Enter" && handleSubmit()}
+          placeholder="Enter text here"
+          style={{
+            width: "70%",
+            padding: "10px",
+            marginRight: "10px",
+            borderRadius: "5px"
+          }}
+        />
+        <button
+          onClick={handleSubmit}
+          style={{
+            padding: "10px 20px",
+            backgroundColor: "#4CAF50",
+            color: "white",
+            border: "none",
+            borderRadius: "5px",
+            cursor: "pointer"
+          }}
+        >
+          Send
+        </button>
+      </footer>
+    </div>
+  );
+};
+
+
+
+
+
+
+
+
+
+
+
+
+
+const WordChain_1 = () => {
   const [inputValue, setInputValue] = useState("");
   const [textBlocks, setTextBlocks] = useState([]);
   const endOfListRef = useRef(null);

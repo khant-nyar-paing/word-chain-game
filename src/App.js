@@ -239,7 +239,13 @@ function WordChain() {
   }, [textBlocks]); // This effect runs whenever the textBlocks state changes (i.e., when a new block is added)
 
   return (
-    <div style={{ display: "flex", flexDirection: "column", height: "100vh" }}>
+    <div
+      style={{
+        display: "flex", // Defines the container as a flexbox,
+        flexDirection: "column", // Stacks the flex items vertically from top to bottom
+        height: "calc(100vh - env(safe-area-inset-bottom))", // Sets the height of the container to 100% of the viewport height
+      }}
+    >
       {/* Header Section */}
       <header
         style={{
@@ -250,7 +256,7 @@ function WordChain() {
           flexShrink: 0, // Prevents the header from shrinking when the window is resized
         }}
       >
-        <h1>Header</h1>
+        <h1>Header Deployed at 11:28</h1>
       </header>
 
       {/* Main Content Section with Scrollable Text Blocks */}
@@ -262,7 +268,7 @@ function WordChain() {
           flexDirection: "column", // Arranges text blocks vertically
           gap: "10px", // Adds space between text blocks
           justifyContent: "flex-start", // Aligns items at the start of the container (top)
-          overflowY: "auto", // Enables vertical scrolling if content overflows
+          overflowY: "scroll", // Enables vertical scrolling if content overflows
           maxHeight: "calc(100vh - 140px)", // Restricts the height to fit within the available space (considering header and footer)
         }}
       >

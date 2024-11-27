@@ -104,7 +104,9 @@ export const WordChainDisplay_ = ({ moves, targetWord, isNewMove }) => {
 };
 
 // Input controls component
-export const InputControls = ({ inputRef, inputValue, setInputValue, isComplete, isLoading, handleNewWord, handleUndo, moves }) => {
+export const InputControls = ({ inputRef, inputValue, setInputValue, isComplete, isLoading, handleNewWord, handleUndo, moves, targetWord }) => {
+    const targetStyle = 'bg-green-100 hover:bg-green-200 border-green-200 text-green-800';
+
     const handleSubmit = () => {
         if (inputValue.trim()) {
             handleNewWord(inputValue.trim());
@@ -112,37 +114,46 @@ export const InputControls = ({ inputRef, inputValue, setInputValue, isComplete,
     };
 
     return (
-        <div className="flex gap-2">
-            <input
-                ref={inputRef}
-                type="text"
-                value={inputValue}
-                onChange={(e) => setInputValue(e.target.value.toLowerCase())}
-                placeholder="Enter word"
-                disabled={isComplete || isLoading}
-                className="flex-1 p-2 border rounded-lg font-mono focus:ring focus:ring-blue-500"
-                onKeyDown={(e) => {
-                    if (e.key === 'Enter') handleSubmit();
-                }}
-            />
+        <div className="flex flex-col items-center gap-2">
+            <div className="flex gap-1">
+                {targetWord.split('').map((char, index) => (
+                    <div className={`w-12 h-12 flex items-center justify-center rounded-lg font-mono text-2xl border ${targetWord === targetWord ? targetStyle : getLetterColor(index)}`}>
+                        {char}
+                    </div>
+                ))}
+            </div>
+            <div className="flex gap-2">
+                <input
+                    ref={inputRef}
+                    type="text"
+                    value={inputValue}
+                    onChange={(e) => setInputValue(e.target.value.toLowerCase())}
+                    placeholder="Enter word"
+                    disabled={isComplete || isLoading}
+                    className="flex-1 p-2 border rounded-lg font-mono focus:ring focus:ring-blue-500"
+                    onKeyDown={(e) => {
+                        if (e.key === 'Enter') handleSubmit();
+                    }}
+                />
 
-            <button
-                onClick={handleSubmit}
-                disabled={isComplete || isLoading || !inputValue.trim()}
-                className="p-2 rounded-lg bg-blue-600 text-white hover:bg-blue-700 disabled:opacity-50"
-                title="Submit (Enter)"
-            >
-                <Send size={20} />
-            </button>
+                <button
+                    onClick={handleSubmit}
+                    disabled={isComplete || isLoading || !inputValue.trim()}
+                    className="p-2 rounded-lg bg-blue-600 text-white hover:bg-blue-700 disabled:opacity-50"
+                    title="Submit (Enter)"
+                >
+                    <Send size={20} />
+                </button>
 
-            <button
-                onClick={handleUndo}
-                disabled={moves.length <= 1 || isLoading}
-                className="p-2 rounded-lg bg-gray-200 text-gray-700 hover:bg-gray-300 disabled:opacity-50"
-                title="Undo (Backspace)"
-            >
-                <RotateCcw size={20} />
-            </button>
+                <button
+                    onClick={handleUndo}
+                    disabled={moves.length <= 1 || isLoading}
+                    className="p-2 rounded-lg bg-gray-200 text-gray-700 hover:bg-gray-300 disabled:opacity-50"
+                    title="Undo (Backspace)"
+                >
+                    <RotateCcw size={20} />
+                </button>
+            </div>
         </div>
     );
 };

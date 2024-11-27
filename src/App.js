@@ -211,6 +211,30 @@ function WordChain() {
   // useRef hook to reference the last div in the text blocks list
   const endOfListRef = useRef(null); // This will be used to scroll to the bottom of the list when a new block is added
 
+  // For keyboard avoiding view
+  const [isKeyboardVisible, setIsKeyboardVisible] = useState(false);
+
+  // Dynamic viewport height
+  const [viewportHeight, setViewportHeight] = useState(window.innerHeight);
+
+  // Adjust the viewport height dynamically when the window resizes (keyboard appears/disappears)
+  useEffect(() => {
+    const handleResize = () => { setViewportHeight(window.innerHeight); }; // Update height when keyboard shows or hides
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
+  // Listen for keyboard visibility changes
+  useEffect(() => {
+    const handleResize = () => {
+      setIsKeyboardVisible(window.innerHeight < 500); // You can adjust the threshold
+    };
+
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
+
   // Handles changes in the input field and updates the state
   const handleInputChange = (event) => {
     setInputValue(event.target.value); // Updates the inputValue state with the new text typed in the input
@@ -275,7 +299,8 @@ function WordChain() {
           gap: "10px", // Adds space between text blocks
           justifyContent: "flex-start", // Aligns items at the start of the container (top)
           overflowY: "scroll", // Enables vertical scrolling if content overflows
-          maxHeight: "calc(100vh - 140px)", // Restricts the height to fit within the available space (considering header and footer)
+          // maxHeight: "calc(100vh - 140px)", // Restricts the height to fit within the available space (considering header and footer)
+          maxHeight: `calc(${viewportHeight}px - 140px)`, // Adjust content area height based on dynamic viewport height
         }}
       >
         {

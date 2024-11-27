@@ -201,7 +201,149 @@ const WordChain_ = () => {
 };
 
 
-function WordChain() {
+
+
+
+
+
+
+
+
+
+const WordChain = () => {
+  const [inputValue, setInputValue] = useState("");
+  const [textBlocks, setTextBlocks] = useState([]);
+  const endOfListRef = useRef(null);
+  const [viewportHeight, setViewportHeight] = useState(window.innerHeight);
+
+  useEffect(() => {
+    const handleResize = () => {
+      // Use visual viewport height for iOS
+      const height = window.visualViewport?.height || window.innerHeight;
+      setViewportHeight(height);
+    };
+
+    // Listen to visualViewport changes for iOS
+    window.visualViewport?.addEventListener('resize', handleResize);
+    window.visualViewport?.addEventListener('scroll', handleResize);
+
+    // Fallback for browsers without visualViewport
+    window.addEventListener('resize', handleResize);
+
+    return () => {
+      window.visualViewport?.removeEventListener('resize', handleResize);
+      window.visualViewport?.removeEventListener('scroll', handleResize);
+      window.removeEventListener('resize', handleResize);
+    };
+  }, []);
+
+  const handleInputChange = (event) => {
+    setInputValue(event.target.value);
+  };
+
+  const handleSubmit = () => {
+    if (inputValue.trim()) {
+      setTextBlocks([...textBlocks, inputValue]);
+      setInputValue("");
+    }
+  };
+
+  const handleKeyPress = (event) => {
+    if (event.key === "Enter") {
+      handleSubmit();
+    }
+  };
+
+  useEffect(() => {
+    endOfListRef.current?.scrollIntoView({ behavior: "smooth" });
+  }, [textBlocks]);
+
+  return (
+    <div style={{
+      height: '100%',
+      position: 'fixed',
+      width: '100%',
+      top: 0,
+      left: 0,
+      display: 'flex',
+      flexDirection: 'column'
+    }}>
+      <header style={{
+        backgroundColor: "#4CAF50",
+        color: "white",
+        padding: "10px",
+        textAlign: "center",
+        position: "sticky",
+        top: 0,
+        zIndex: 10,
+      }}>
+        <h1>Header</h1>
+      </header>
+
+      <main style={{
+        flex: 1,
+        padding: "20px",
+        display: "flex",
+        flexDirection: "column",
+        gap: "10px",
+        overflowY: "scroll",
+        height: `${viewportHeight - 140}px`
+      }}>
+        {textBlocks.map((text, index) => (
+          <div key={index} style={{
+            backgroundColor: "#f8f9fa",
+            padding: "10px",
+            borderRadius: "5px",
+          }}>
+            {text}
+          </div>
+        ))}
+        <div ref={endOfListRef} />
+      </main>
+
+      <footer style={{
+        backgroundColor: "#f1f1f1",
+        padding: "10px",
+        textAlign: "center",
+        position: "sticky",
+        bottom: 0
+      }}>
+        <input
+          type="text"
+          value={inputValue}
+          onChange={handleInputChange}
+          onKeyDown={handleKeyPress}
+          placeholder="Enter text here"
+          style={{
+            width: "70%",
+            padding: "10px",
+            marginRight: "10px",
+            borderRadius: "5px"
+          }}
+        />
+        <button
+          onClick={handleSubmit}
+          style={{
+            padding: "10px 20px",
+            backgroundColor: "#4CAF50",
+            color: "white",
+            border: "none",
+            borderRadius: "5px",
+            cursor: "pointer"
+          }}
+        >
+          Send
+        </button>
+      </footer>
+    </div>
+  );
+};
+
+
+
+
+
+function WordChain__() {
   // State hook for tracking the current value of the input field
   const [inputValue, setInputValue] = useState(""); // Initializes the input field with an empty string
 
@@ -286,7 +428,7 @@ function WordChain() {
           justifyContent: "flex-start", // Aligns items at the start of the container (top)
           overflowY: "scroll", // Enables vertical scrolling if content overflows
           // maxHeight: "calc(100vh - 140px)", // Restricts the height to fit within the available space (considering header and footer)
-          maxHeight: `calc(${viewportHeight}px - 500px)`, // Adjust content area height based on dynamic viewport height
+          maxHeight: `calc(${viewportHeight}px - 140px)`, // Adjust content area height based on dynamic viewport height
         }}
       >
         {
